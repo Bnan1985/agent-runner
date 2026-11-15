@@ -1,0 +1,60 @@
+name: Run Code
+
+on:
+  workflow_dispatch:
+    inputs:
+      job_id:
+        description: 'unique job id'
+        required: true
+        type: string
+      language:
+        description: 'python | node | shell'
+        required: true
+        type: string
+      code:
+        description: 'code to execute'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Execute code
+        id: exec
+        env:
+          CODE: ${{ inputs.code }}
+          LANGX: ${{ inputs.language }}
+          JOB_ID: ${{ inputs.job_id }}
+        shell: bash
+        run: |
+          mkdir -p results
+          case "$LANGX" in
+            python)
+              printf '%s' "$CODE" > job.py
+              OUT=$(python3 job.py 2>&1) ;;
+            node)
+              printf '%s' "$CODE" > job.js
+              OUT=$(node job.js 2>&1) ;;
+            shell)
+              OUT=$(bash -c "$CODE" 2>&1) ;;
+            *)
+              OUT="unsupported language: $LANGX" ;;
+          esac
+          printf '{"job_id": "%s", "output": %s, "ran_at": "%s"}' \
+            "$JOB_ID" "$(printf '%s' "$OUT" | jq -Rs .)" "$(date -u +%FT%TZ)" > results/latest.json
+
+      - name: Commit result
+        shell: bash
+        run: |
+          git config user.name "agent-bot"
+          git config user.email "agent-bot@noreply.local"
+          git add results/latest.json
+          git diff --cached --quiet || git commit -m "job result: ${{ inputs.job_id }}"
+          git push
