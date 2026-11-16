@@ -1,1 +1,1 @@
-{"job_id": "manual-test-3", "output": "hello from agent-runner 42", "ran_at": "2026-11-15T07:40:50Z"}
+{"job_id": "", "exit_code": 0, "output": "2", "ran_at": "2026-11-16T00:49:25Z"}
