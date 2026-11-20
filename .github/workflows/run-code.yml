@@ -32,6 +32,7 @@ jobs:
           CODE: ${{ inputs.code }}
           LANGX: ${{ inputs.language }}
           JOB_ID: ${{ inputs.job_id }}
+          CNB_TOKEN: ${{ secrets.CNB_TOKEN }}
         shell: bash
         run: |
           set +e
