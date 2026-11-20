@@ -1,1 +1,1 @@
-{"job_id": "cnb-connect-test-1795181877", "exit_code": 0, "output": "cnb.cool HTTP 200\n---\napi.cnb.cool HTTP 200", "ran_at": "2026-11-20T13:38:09Z"}
+{"job_id": "cnb-write-e2e-1795185233", "exit_code": 0, "output": "PUSH_FAIL", "ran_at": "2026-11-20T14:34:01Z"}
